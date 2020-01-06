@@ -1,0 +1,19 @@
+version: '3'
+services:
+    mdtopdf:
+        build: ./docker/mdtopdf
+        container_name: mdtopdf
+        ports:
+            - 8000:8000
+        volumes:
+        - ./workdir:/workdir
+        tty: true
+    # nginx:
+    #     image: nginx
+    #     container_name: nginx
+    #     ports: 
+    #         - 80:80
+    #     volumes: 
+    #         - ./docker/nginx/:/etc/nginx/conf.d/
+
+
