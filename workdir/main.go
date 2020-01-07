@@ -11,6 +11,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 拡張子チェック
+func extCheck(checks []string, filename string) bool {
+    for _, c := range checks {
+        if filepath.Ext(filename) == c {
+            return true
+        }
+    }
+    return false
+}
+
+
 func main() {
     router := gin.Default()
     const PATH = "resource/"
@@ -23,49 +34,56 @@ func main() {
 
 	router.POST("/upload", func(c *gin.Context) {
         convertType := c.PostForm("type")
-        // Source
-		file, err := c.FormFile("file")
-		if err != nil {
-            c.String(http.StatusBadRequest, fmt.Sprintf("get form err: %s", err.Error()))
+
+        // imageファイル
+		form, m_err := c.MultipartForm()
+		if m_err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("get form err: %s", m_err.Error()))
 			return
 		}
-        
-        filename := filepath.Base(file.Filename)
+		image_files := form.File["image_files"]
 
+		for _, image_file := range image_files {
+            image_filename := filepath.Base(image_file.Filename)
+            
+            if !extCheck([]string{".png", "jpg", "jpeg"}, image_filename) {
+                c.String(http.StatusBadRequest, fmt.Sprintf("upload file is not Image file."))
+			    return
+            }
+			if err := c.SaveUploadedFile(image_file, PATH + image_filename); err != nil {
+				c.String(http.StatusBadRequest, fmt.Sprintf("upload image file err: %s", err.Error()))
+				return
+			}
+		}
+
+        // mdファイル
+		md_file, f_err := c.FormFile("md_file")
+		if f_err != nil {
+            c.String(http.StatusBadRequest, fmt.Sprintf("get form err: %s", f_err.Error()))
+			return
+		}
+        md_filename := filepath.Base(md_file.Filename)
         // md以外をはじく
-        if filepath.Ext(filename) != ".md" {
+        if !extCheck([]string{".md"}, md_filename) {
             c.String(http.StatusBadRequest, fmt.Sprintf("upload file is not Markdown file."))
 			return
         }
 
         // ファイルをuploadする
-		if err := c.SaveUploadedFile(file, PATH + filename); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("upload file err: %s", err.Error()))
+		if err := c.SaveUploadedFile(md_file, PATH + md_filename); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("upload markdown file err: %s", err.Error()))
 			return
         }
-
-        // go func(filename string, c *gin.Context) {
-        //     cmd := exec.Command("mdtopdf", PATH + filename)
-        //     stdoutStderr, err := cmd.CombinedOutput()
-        //     if err != nil {
-        //         log.Fatal(err)
-        //     }
-        //     fmt.Printf("%s", stdoutStderr)
-        //     fmt.Println("success!!!")
-        //     c.Redirect(303, "http://www.google.com/")
-        //     }(filename, c)
         cmdName := "mdtopdf"
-        outputFile := strings.Replace(filename, filepath.Ext(filename), ".pdf", -1)
+        outputFile := strings.Replace(md_filename, filepath.Ext(md_filename), ".pdf", -1)
         if convertType == "tex" {
             cmdName = "mdtotex"
-            outputFile = strings.Replace(filename, filepath.Ext(filename), ".tex", -1)
+            outputFile = strings.Replace(md_filename, filepath.Ext(md_filename), ".tex", -1)
         }
-        cmd := exec.Command(cmdName, PATH + filename)
-        stdoutStderr, err := cmd.CombinedOutput()
-        if err != nil {
-            log.Fatal(err)
+        c_err := exec.Command(cmdName, PATH + md_filename).Run()
+        if c_err != nil {
+            log.Fatal(c_err)
         }
-        fmt.Printf("%s", stdoutStderr)
         fmt.Println("success!!!")
         c.Redirect(303, "http://0.0.0.0:8000/download/" + outputFile)
             

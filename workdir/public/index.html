@@ -10,8 +10,13 @@
     <h1>Please upload a markdown file.</h1>
 
     <form action="/upload" method="post" enctype="multipart/form-data">
-        Files: <input type="file" name="file"><br><br>
-        Types: <input type="radio" name="type" value="pdf" checked>pdf <input type="radio" name="type" value="tex">tex
+        Markdown Files: <input type="file" name="md_file"><br><br>
+        Image Files(only png, jpeg): <input type="file" name="image_files" multiple><br><br>
+        <div class="type-radio">
+            Types:
+            <input type="radio" name="type" value="pdf" checked>pdf
+            <input type="radio" name="type" value="tex">tex
+        </div>
         <input type="submit" value="Submit">
     </form>
 </body>
