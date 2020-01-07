@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="ja">
+
 <head>
     <meta charset="utf-8">
     <title>Markdown file upload</title>
@@ -8,12 +9,12 @@
             text-align: center;
             margin: 0 auto;
         }
-
+        
         #filearea {
-            width:400px;
+            width: 400px;
             height: 200px;
             border: 2px dotted gray;
-            border-radius : 20px;     
+            border-radius: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,14 +22,22 @@
         }
     </style>
 </head>
+
 <body>
-    <form id="upload" enctype="multipart/form-data">
-        <div id="filearea">
-            <input id="fileInput" type="file" value="ファイルを選択" name="file">
-        </div>
-        Types: <input type="radio" name="type" value="pdf" checked>pdf <input type="radio" name="type" value="tex">tex
-        <input type="submit" value="Submit">
-    </form>
+    <div>
+        <form id="upload" enctype="multipart/form-data">
+            <div id="filearea">
+                <input id="fileInput" type="file" value="ファイルを選択" name="file">
+            </div>
+            Types: <input type="radio" name="type" value="pdf" checked>pdf <input type="radio" name="type" value="tex">tex
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <div id="viewArea">
+        <iframe id="viewFrame" src="" frameborder="0" width="500" height="750"></iframe>
+    </div>
+
 
     <!-- <form action="/upload" method="post" enctype="multipart/form-data">
         Files: <input type="file" name="file"><br><br>
@@ -53,7 +62,7 @@
             event.preventDefault();
             const files = event.dataTransfer.files;
             filearea.classList.remove("dragover");
-            fileInput.files = files; 
+            fileInput.files = files;
             console.log("drop");
         });
 
@@ -69,6 +78,14 @@
 
             xhr.open("POST", "upload");
             xhr.send(fd);
+
+            // レスポンスの中のurlでiframeを再読み込みする
+            xhr.onload = function() {
+                const res = JSON.parse(xhr.responseText);
+
+                console.log("response: " + res["Url"]);
+                document.getElementById('viewFrame').contentWindow.location.replace(res["Url"]);
+            };
         });
     </script>
 </body>
