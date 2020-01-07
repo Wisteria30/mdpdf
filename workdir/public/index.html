@@ -20,17 +20,31 @@
             align-items: center;
             margin: 0 auto;
         }
+        
+        #viewArea {
+            margin: 50px 80px;
+            border: 4px solid gray;
+            border-radius: 20px;
+        }
     </style>
 </head>
 
 <body>
     <div>
+        <h1>MdPdF</h1>
+        </h3>MarkDownファイルから、LaTeXファイル及びpdfファイルを生成します。</h3>
+    </div>
+
+
+
+
+    <div>
         <form id="upload" enctype="multipart/form-data">
             <div id="filearea">
                 <input id="fileInput" type="file" value="ファイルを選択" name="file">
             </div>
-            Types: <input type="radio" name="type" value="pdf" checked>pdf <input type="radio" name="type" value="tex">tex
-            <input type="submit" value="Submit">
+            ファイルの変換形式: <input type="radio" name="type" value="pdf" checked>pdf <input type="radio" name="type" value="tex">tex
+            <input type="submit" value="変換">
         </form>
     </div>
 
