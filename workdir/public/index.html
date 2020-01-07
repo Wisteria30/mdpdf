@@ -1,17 +1,74 @@
 <!doctype html>
 <html lang="ja">
-
 <head>
     <meta charset="utf-8">
     <title>Markdown file upload</title>
+    <style type="text/css">
+        body {
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        #filearea {
+            width:400px;
+            height: 200px;
+            border: 2px dotted gray;
+            border-radius : 20px;     
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
+    </style>
 </head>
-
 <body>
-    <h1>Please upload a markdown file.</h1>
-
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        Files: <input type="file" name="file"><br><br>
+    <form id="upload" enctype="multipart/form-data">
+        <div id="filearea">
+            <input id="fileInput" type="file" value="ファイルを選択" name="file">
+        </div>
         Types: <input type="radio" name="type" value="pdf" checked>pdf <input type="radio" name="type" value="tex">tex
         <input type="submit" value="Submit">
     </form>
+
+    <!-- <form action="/upload" method="post" enctype="multipart/form-data">
+        Files: <input type="file" name="file"><br><br>
+        Types: <input type="radio" name="type" value="pdf" checked>pdf <input type="radio" name="type" value="tex">tex
+        <input type="submit" value="Submit">
+    </form> -->
+    <script>
+        const filearea = document.getElementById("filearea");
+        const fileInput = document.getElementById("fileInput")
+
+        filearea.addEventListener("dragover", event => {
+            event.preventDefault();
+            filearea.classList.add("dragover");
+        });
+
+        filearea.addEventListener("dragleave", event => {
+            event.preventDefault();
+            filearea.classList.remove("dragover");
+        });
+
+        filearea.addEventListener("drop", event => {
+            event.preventDefault();
+            const files = event.dataTransfer.files;
+            filearea.classList.remove("dragover");
+            fileInput.files = files; 
+            console.log("drop");
+        });
+
+        const form = document.getElementById("upload");
+        form.addEventListener("submit", event => {
+            event.preventDefault();
+            const xhr = new XMLHttpRequest();
+            const fd = new FormData(form);
+
+            xhr.addEventListener("load", xhrevent => {
+                console.log(xhrevent.target.responseText);
+            });
+
+            xhr.open("POST", "upload");
+            xhr.send(fd);
+        });
+    </script>
 </body>
