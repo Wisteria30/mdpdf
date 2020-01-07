@@ -19,6 +19,7 @@
             justify-content: center;
             align-items: center;
             margin: 0 auto;
+            font-size: 20;
         }
         
         #viewArea {
@@ -30,6 +31,10 @@
         #loading {
             font-size: 48px;
             font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+        
+        #convert {
+            font-size: 20;
         }
     </style>
 </head>
@@ -48,74 +53,76 @@
             <div id="filearea">
                 <input id="fileInput" type="file" value="ファイルを選択" name="file">
             </div>
-            ファイルの変換形式: <input type="radio" name="type" value="pdf" checked>pdf <input type="radio" name="type" value="tex">tex
-            <input type="submit" value="変換">
+            <div id="convert">
+                ファイルの変換形式: <input type="radio" name="type" value="pdf" checked>pdf <input type="radio" name="type" value="tex">tex
+                <input type="submit" value="変換">
+                </div　>
         </form>
-    </div>
-
-    <div id="viewArea">
-        <div>
-            <h1 id=loading></h1>
         </div>
-        <iframe id="viewFrame" src="" frameborder="0" width="500" height="750"></iframe>
-    </div>
+
+        <div id="viewArea">
+            <div>
+                <h1 id=loading></h1>
+            </div>
+            <iframe id="viewFrame" src="" frameborder="0" width="1000" height="1450"></iframe>
+        </div>
 
 
-    <!-- <form action="/upload" method="post" enctype="multipart/form-data">
+        <!-- <form action="/upload" method="post" enctype="multipart/form-data">
         Files: <input type="file" name="file"><br><br>
         Types: <input type="radio" name="type" value="pdf" checked>pdf <input type="radio" name="type" value="tex">tex
         <input type="submit" value="Submit">
     </form> -->
-    <script>
-        const filearea = document.getElementById("filearea");
-        const fileInput = document.getElementById("fileInput");
-        const loading = document.getElementById("loading");
+        <script>
+            const filearea = document.getElementById("filearea");
+            const fileInput = document.getElementById("fileInput");
+            const loading = document.getElementById("loading");
 
-        filearea.addEventListener("dragover", event => {
-            event.preventDefault();
-            filearea.classList.add("dragover");
-        });
-
-        filearea.addEventListener("dragleave", event => {
-            event.preventDefault();
-            filearea.classList.remove("dragover");
-        });
-
-        filearea.addEventListener("drop", event => {
-            event.preventDefault();
-            const files = event.dataTransfer.files;
-            filearea.classList.remove("dragover");
-            fileInput.files = files;
-            console.log("drop");
-        });
-
-        const form = document.getElementById("upload");
-        form.addEventListener("submit", event => {
-            event.preventDefault();
-            const xhr = new XMLHttpRequest();
-            const fd = new FormData(form);
-
-            xhr.addEventListener("load", xhrevent => {
-                console.log(xhrevent.target.responseText);
+            filearea.addEventListener("dragover", event => {
+                event.preventDefault();
+                filearea.classList.add("dragover");
             });
 
-            xhr.open("POST", "upload");
-            xhr.send(fd);
-            loading.innerHTML = "Now Loading..."
+            filearea.addEventListener("dragleave", event => {
+                event.preventDefault();
+                filearea.classList.remove("dragover");
+            });
 
-            xhr.onprogress = function() {
+            filearea.addEventListener("drop", event => {
+                event.preventDefault();
+                const files = event.dataTransfer.files;
+                filearea.classList.remove("dragover");
+                fileInput.files = files;
+                console.log("drop");
+            });
 
-                console.log("loading");
-            }
+            const form = document.getElementById("upload");
+            form.addEventListener("submit", event => {
+                event.preventDefault();
+                const xhr = new XMLHttpRequest();
+                const fd = new FormData(form);
 
-            // レスポンスの中のurlでiframeを再読み込みする
-            xhr.onload = function() {
-                loading.innerHTML = "";
-                const res = JSON.parse(xhr.responseText);
+                xhr.addEventListener("load", xhrevent => {
+                    console.log(xhrevent.target.responseText);
+                });
 
-                console.log("response: " + res["Url"]);
-                document.getElementById('viewFrame').contentWindow.location.replace(res["Url"]);
-            };
-        });
-    </script>
+                xhr.open("POST", "upload");
+                xhr.send(fd);
+                loading.innerHTML = "Now Loading..."
+
+                xhr.onprogress = function() {
+
+                    console.log("loading");
+                }
+
+                // レスポンスの中のurlでiframeを再読み込みする
+                xhr.onload = function() {
+                    loading.innerHTML = "";
+                    const res = JSON.parse(xhr.responseText);
+
+                    console.log("response: " + res["Url"]);
+                    document.getElementById('viewFrame').contentWindow.location.replace(res["Url"]);
+                };
+            });
+        </script>
 </body>
