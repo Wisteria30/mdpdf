@@ -26,6 +26,11 @@
             border: 4px solid gray;
             border-radius: 20px;
         }
+        
+        #loading {
+            font-size: 48px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
     </style>
 </head>
 
@@ -49,6 +54,9 @@
     </div>
 
     <div id="viewArea">
+        <div>
+            <h1 id=loading></h1>
+        </div>
         <iframe id="viewFrame" src="" frameborder="0" width="500" height="750"></iframe>
     </div>
 
@@ -60,7 +68,8 @@
     </form> -->
     <script>
         const filearea = document.getElementById("filearea");
-        const fileInput = document.getElementById("fileInput")
+        const fileInput = document.getElementById("fileInput");
+        const loading = document.getElementById("loading");
 
         filearea.addEventListener("dragover", event => {
             event.preventDefault();
@@ -92,9 +101,16 @@
 
             xhr.open("POST", "upload");
             xhr.send(fd);
+            loading.innerHTML = "Now Loading..."
+
+            xhr.onprogress = function() {
+
+                console.log("loading");
+            }
 
             // レスポンスの中のurlでiframeを再読み込みする
             xhr.onload = function() {
+                loading.innerHTML = "";
                 const res = JSON.parse(xhr.responseText);
 
                 console.log("response: " + res["Url"]);
