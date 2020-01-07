@@ -6,12 +6,18 @@ import (
     "log"
     "strings"
 	"net/http"
-	"path/filepath"
+    "path/filepath"
 
 	"github.com/gin-gonic/gin"
 )
 
+type Result struct {
+    Url string `json: "url"`
+}
+
 func main() {
+    host := "localhost"
+    port := "8000" 
     router := gin.Default()
     const PATH = "resource/"
     
@@ -67,7 +73,14 @@ func main() {
         }
         fmt.Printf("%s", stdoutStderr)
         fmt.Println("success!!!")
-        c.Redirect(303, "http://0.0.0.0:8000/download/" + outputFile)
+
+        result := Result{
+            Url: "http://"+host+":"+port+"/download/" + outputFile,
+        }
+
+        c.JSON(200, result)
+
+        // c.Redirect(303, "http://0.0.0.0:8000/download/" + outputFile)
             
         // c.String(http.StatusOK, fmt.Sprintf("File %s waiting....", file.Filename))
     })
