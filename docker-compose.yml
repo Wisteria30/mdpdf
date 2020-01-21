@@ -3,6 +3,7 @@ services:
     mdtopdf:
         build: ./docker/mdtopdf
         container_name: mdtopdf
+        command: go run main.go
         ports:
             - 8000:8000
         volumes:
@@ -18,12 +19,14 @@ services:
         volumes:
         - ./servlet:/src
         tty: true
-    # nginx:
-    #     image: nginx
-    #     container_name: nginx
-    #     ports: 
-    #         - 80:80
-    #     volumes: 
-    #         - ./docker/nginx/:/etc/nginx/conf.d/
-
-
+    nginx:
+        image: nginx:1.17
+        container_name: mdtopdf_nginx 
+        ports: 
+        - 3000:80
+        volumes:
+        - ./nginx:/etc/nginx/conf.d/
+        tty: true
+        depends_on:
+        - mdtopdf
+        - servlet

@@ -106,7 +106,7 @@
                     console.log(xhrevent.target.responseText);
                 });
 
-                xhr.open("POST", "upload");
+                xhr.open("POST", "/api/upload");
                 xhr.send(fd);
                 loading.innerHTML = "Now Loading..."
 
