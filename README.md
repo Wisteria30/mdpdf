@@ -1,16 +1,17 @@
 # MdPdF
-p1assさんのhttps://github.com/p1ass/mdtopdfをwebアプリにしたもの
+p1assさんのhttps://github.com/p1ass/mdtopdf をwebアプリにしたもの
 
 ```sh
 docker-compose up -d
-# 作業するなら
-docker-compose exec mdtopdf /bin/bash
-go run main.go
+# access to localhost:3000
 ```
 
 # 環境
 - docker-compose
 - golang
+- nginx
+- java
+- servlet
 
 # FrameWork・Library
 - gin

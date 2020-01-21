@@ -9,6 +9,10 @@
             text-align: center;
             margin: 0 auto;
         }
+
+        #title {
+            padding-top: 10px;
+        }
         
         #filearea {
             width: 400px;
@@ -40,9 +44,9 @@
 </head>
 
 <body>
-    <div>
+    <div id="title">
         <h1>MdPdF</h1>
-        </h3>MarkDownファイルから、LaTeXファイル及びpdfファイルを生成します。</h3>
+        <h3>MarkDownファイルから、LaTeXファイル及びpdfファイルを生成します。</h3>
     </div>
 
 
@@ -56,7 +60,7 @@
             <div id="convert">
                 ファイルの変換形式: <input type="radio" name="type" value="pdf" checked>pdf <input type="radio" name="type" value="tex">tex
                 <input type="submit" value="変換">
-                </div　>
+                </div>
         </form>
         </div>
 
