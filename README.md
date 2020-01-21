@@ -18,6 +18,5 @@ docker-compose up -d
 
 # デモ
 
-![画面1](./demo1.png)
-![画面2](./demo2.png)
+![画面](./demo.png)
 
