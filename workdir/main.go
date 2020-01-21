@@ -16,8 +16,8 @@ type Result struct {
 }
 
 func main() {
-    host := "localhost"
-    port := "8000" 
+    // host := "localhost"
+    // port := "8000" 
     router := gin.Default()
     const PATH = "resource/"
     
@@ -75,7 +75,8 @@ func main() {
         fmt.Println("success!!!")
 
         result := Result{
-            Url: "http://"+host+":"+port+"/download/" + outputFile,
+            // Url: "http://"+host+":"+port+"/download/" + outputFile,
+            Url: "/api/download/" + outputFile,
         }
 
         c.JSON(200, result)
