@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>Markdown file upload</title>
+    <style type="text/css">
+        body {
+            text-align: center;
+            margin: 0 auto;
+        }
+        
+        #filearea {
+            width: 400px;
+            height: 200px;
+            border: 2px dotted gray;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            font-size: 20;
+        }
+        
+        #viewArea {
+            margin: 50px 80px;
+            border: 4px solid gray;
+            border-radius: 20px;
+        }
+        
+        #loading {
+            font-size: 48px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+        
+        #convert {
+            font-size: 20;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>MdPdF</h1>
+        </h3>MarkDownファイルから、LaTeXファイル及びpdfファイルを生成します。</h3>
+    </div>
+
+
+
+
+    <div>
+        <form id="upload" enctype="multipart/form-data">
+            <div id="filearea">
+                <input id="fileInput" type="file" value="ファイルを選択" name="file">
+            </div>
+            <div id="convert">
+                ファイルの変換形式: <input type="radio" name="type" value="pdf" checked>pdf <input type="radio" name="type" value="tex">tex
+                <input type="submit" value="変換">
+                </div　>
+        </form>
+        </div>
+
+        <div id="viewArea">
+            <div>
+                <h1 id=loading></h1>
+            </div>
+            <iframe id="viewFrame" src="" frameborder="0" width="1000" height="1450"></iframe>
+        </div>
+
+
+        <!-- <form action="/upload" method="post" enctype="multipart/form-data">
+        Files: <input type="file" name="file"><br><br>
+        Types: <input type="radio" name="type" value="pdf" checked>pdf <input type="radio" name="type" value="tex">tex
+        <input type="submit" value="Submit">
+    </form> -->
+        <script>
+            const filearea = document.getElementById("filearea");
+            const fileInput = document.getElementById("fileInput");
+            const loading = document.getElementById("loading");
+
+            filearea.addEventListener("dragover", event => {
+                event.preventDefault();
+                filearea.classList.add("dragover");
+            });
+
+            filearea.addEventListener("dragleave", event => {
+                event.preventDefault();
+                filearea.classList.remove("dragover");
+            });
+
+            filearea.addEventListener("drop", event => {
+                event.preventDefault();
+                const files = event.dataTransfer.files;
+                filearea.classList.remove("dragover");
+                fileInput.files = files;
+                console.log("drop");
+            });
+
+            const form = document.getElementById("upload");
+            form.addEventListener("submit", event => {
+                event.preventDefault();
+                const xhr = new XMLHttpRequest();
+                const fd = new FormData(form);
+
+                xhr.addEventListener("load", xhrevent => {
+                    console.log(xhrevent.target.responseText);
+                });
+
+                xhr.open("POST", "upload");
+                xhr.send(fd);
+                loading.innerHTML = "Now Loading..."
+
+                xhr.onprogress = function() {
+
+                    console.log("loading");
+                }
+
+                // レスポンスの中のurlでiframeを再読み込みする
+                xhr.onload = function() {
+                    loading.innerHTML = "";
+                    const res = JSON.parse(xhr.responseText);
+
+                    console.log("response: " + res["Url"]);
+                    document.getElementById('viewFrame').contentWindow.location.replace(res["Url"]);
+                };
+            });
+        </script>
+</body>

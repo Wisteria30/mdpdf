@@ -1,2 +1,4 @@
 py/static/*
 py/uploads/*
+servlet/bin
+

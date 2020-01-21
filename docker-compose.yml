@@ -8,6 +8,16 @@ services:
         volumes:
         - ./workdir:/workdir
         tty: true
+    servlet:
+        build: ./docker/servlet 
+        container_name: mdtopdf_servlet
+        command: java -cp "lib/*:bin/classes" server.AppServer 8080 / WebContent 
+        working_dir: /src
+        ports:
+            - 8080:8080
+        volumes:
+        - ./servlet:/src
+        tty: true
     # nginx:
     #     image: nginx
     #     container_name: nginx
