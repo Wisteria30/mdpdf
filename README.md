@@ -1,5 +1,5 @@
 # MdPdF
-p1assさんのhttps://github.com/p1ass/mdtopdf をwebアプリにしたもの
+MarkdownファイルをLaTeX型版のpdfに変換するwebアプリケーション
 
 ```sh
 docker-compose up -d
