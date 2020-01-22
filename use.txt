@@ -1,0 +1,28 @@
+--- 最初のアクセス(これがないとscが出るとこない) ---
+usr →(アクセス) tp
+tp →(html要求) sc
+sc →(html送信) tp
+tp →(表示) usr
+--------
+usr →(mdファイルのアップロード) tp
+
+--- if pdf ---
+tp →(mdファイルの保存) ws
+tp →(mdファイルのpdfへの変換) ws
+ws →(mdファイルのpdfへの変換) pd
+pd →(mdファイルから変換されたpdf送信) ws
+ws →(mdファイルから変換されたpdfファイルを描画) tp
+tp →(mdファイルから変換されたpdfファイルの確認) usr
+--------
+--- if tex ---
+tp →(mdファイルの保存) ws
+tp →(mdファイルのtexへの変換) ws
+ws →(mdファイルのtexへの変換) pd
+pd →(mdファイルから変換されたtex送信) ws
+ws →(mdファイルから変換されたtexファイルを描画) tp
+tp →(mdファイルから変換されたtexファイルの確認) usr
+--------
+--- pdf or tex ---
+usr →(pdf or texファイルを取得) tp
+tp →(ダウンロードさせる) usr
+-------- （編集済み） 

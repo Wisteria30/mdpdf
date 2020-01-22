@@ -1,1 +1,3 @@
-/workdir/resource
+/workdir/resource/*.md
+/workdir/resource/*.tex
+/workdir/resource/*.pdf
